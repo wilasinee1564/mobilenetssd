@@ -158,28 +158,18 @@ def event_handle(event,json_line):
         elif (msg == "อยากกินขนม") :
             replyObj = TextSendMessage(text="ซื้อสิ")
             line_bot_api.reply_message(rtoken, replyObj)
+        elif msg == "covid" :
+            url = "https://covid19.ddc.moph.go.th/api/Cases/today-cases-all"
+            response = requests.get(url)
+            response = response.json()
+            replyObj = TextSendMessage(text=str(response))
+            line_bot_api.reply_message(rtoken, replyObj)
         else :
             headers = request.headers
-            json_headers = json.dumps({k:v for k, v in headers.items()})
-            '''
-            json_line = request.get_json(force=False,cache=False)
-            json_line = json.dumps(json_line)
-            decoded = json.loads(json_line)
-            crl= pycurl.Curl()
-            crl.setopt( crl.URL, "https://https://dialogflow.cloud.google.com/v1/integrations/line/webhook/bbf1f7c3-5994-4b33-a13b-a0abce9ab2cf")
-            crl.setopt( crl.POST, 1)
-            crl.setopt( crl.BINARYTRANSFER, true)
-            crl.setopt( crl.POSTFIELDS, decoded)
-            crl.setopt( crl.HTTPHEADER, json_headers)
-            crl.setopt( crl.SSL_VERIFYHOST, 2)
-            crl.setopt( crl.SSL_VERIFYPEER, 1)
-            crl.setopt( crl.FOLLOWLOCATION, 1)
-            crl.setopt( crl.RETURNTRANSFER, 1)
-            crl.perform()
-            crl.close()
-            '''
-            replyObj = TextSendMessage(text=json_headers)
-            line_bot_api.reply_message(rtoken, replyObj)
+            json_headers = ({k:v for k, v in headers.items()})
+            json_headers.update({'Host':'bots.dialogflow.com'})
+            url = "https://dialogflow.cloud.google.com/v1/integrations/line/webhook/bbf1f7c3-5994-4b33-a13b-a0abce9ab2cf"
+            requests.post(url,data=json_line, headers=json_headers)
     elif msgType == "image":
         try:
             message_content = line_bot_api.get_message_content(event['message']['id'])
