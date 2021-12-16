@@ -166,7 +166,7 @@ def event_handle(event):
             json_line = json.dumps(json_line)
             decoded = json.loads(json_line)
             crl= pycurl.Curl()
-            crl.setopt( crl.URL, "https://bots.dialogflow.com/line/f--llcy/webhook")
+            crl.setopt( crl.URL, "https://https://dialogflow.cloud.google.com/v1/integrations/line/webhook/bbf1f7c3-5994-4b33-a13b-a0abce9ab2cf")
             crl.setopt( crl.POST, 1)
             crl.setopt( crl.BINARYTRANSFER, true)
             crl.setopt( crl.POSTFIELDS, decoded)
